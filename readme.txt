@@ -6,7 +6,7 @@ Donate link: http://donate.lbak.co.uk/
 Tags: e-commerce, google, checkout, sell, products, easy
 Requires at least: 3.0.1
 Tested up to: 3.0.1
-Stable tag: 1.0
+Stable tag: 1.1
 
 A simple, easy to use Google Checkout integration WordPress plugin.
 
@@ -59,7 +59,17 @@ want the plugin to look and feel.
 and selling things. If you have any further queries please consult the Help/FAQ
 page in the plugin's menu.
 
+== Frequently Asked Questions ==
+
+The frequently asked questions can be found either inside the plugin or at
+http://lbak.co.uk/faq.php?step=get&tag=lbakgc
+
 == Changelog ==
+
+= 1.1 =
+
+* Fixed a display bug regarding the use of USD as a currency.
+* Introduced a new interactive FAQ system.
 
 = 1.0 =
 

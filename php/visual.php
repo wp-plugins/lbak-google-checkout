@@ -50,171 +50,20 @@ function lbakgc_menu_options() {
         <?php
         switch ($_GET['step']) {
             case 'help':
+                if ($_GET['question'] == 'success') {
+                    echo '<div class="updated">Question submitted successfully!
+                        Please wait at least a few days for an answer.</div>';
+                }
+                else if ($_GET['question'] == 'fail') {
+                    echo '<div class="error">There was a problem submitting
+                        your question. Please fill out all of the form fields.</div>';
+                }
                 ?>
     <div id="poststuff" class="ui-sortable meta-box-sortable">
         <div class="postbox" id="top">
             <h3><?php _e('I\'m stuck and I need help!', 'lbakgc'); ?></h3>
             <div class="inside">
-                <?php _e('The following page is designed to answer any and all
-                    queries you might have about the LBAK Google Checkout plugin.
-                    Click on any of the topics below to begin:
-                    <br /><br />
-                    <a href="#setup">How do I set up the plugin?</a><br /><br />
-                    <a href="#sandbox">What does Sandbox Mode mean?</a><br /><br />
-                    <a href="#mid">How do I find my Merchant ID?</a><br /><br />
-                    <a href="#currency">What currency should I use?</a><br /><br />
-                    <a href="#addproduct">How do I add a product to my blog?</a><br /><br />
-                    <a href="#shortcode">What is a shortcode and how do I use one?</a><br /><br />
-                    <a href="#help">I\'m still confused :(</a><br /><br />
-                    <br /><br /><br />
-                    <div id="setup">
-                    <b>How do I set up the plugin?</b>
-                    <br /><br />
-                    The first thing you need to use this plugin is a Google Checkout
-                    account. Head on over to <a href="http://checkout.google.com">Google Checkout</a>
-                    and sign in with your Google Account. Once you have an account you need
-                    to set up your bank account and verify it (bank account verification
-                    can take a few days so don\'t worry if it doesn\'t happen instantly).<br /><br />
-                    Next, you should set up your tax settings. This is done in your Google Checkout
-                    account under the Preferences in the Settings tab. This plugin does not define
-                    any taxing rules so this makes it your sole responsibility to ensure you are
-                    taxing your customers correctly.<br /><br />
-                    Next you will want to look into setting up shipping. You can do this
-                    either in your Google Checkout account or on each individual item in
-                    the plugin. If you are going to do this via your Google Checkout account,
-                    you will want to go to Settings > Shipping Setup and follow the
-                    instructions there.
-                    <br /><br />
-                    Lastly, you need to enter your merchant ID. The plugin will not
-                    function at all without your merchant ID. This can be found either in
-                    the top right hand corner of the screen when you are logged in
-                    to your Google Checkout account or under Profile in the Settings tab.
-                    If you are wanting to use Sandbox Mode to test out your system please
-                    note that your sandbox merchant ID will be different and there is
-                    a box in this plugin\'s settings page where you can specify this.
-                    <br /><br />
-                    <a href="#top">Back to top</a>
-                    <br /><br />
-                    </div>
-                    <div id="sandbox">
-                    <b>What does Sandbox Mode mean?</b>
-                    <br /><br />
-                    Sandbox Mode is something offered by Google to let you test
-                    your Google Checkout system without accidentally processing any
-                    orders. You can read more on it <a href="https://checkout.google.com/support/sell/bin/answer.py?hl=en-uk&answer=134469" target="_blank">here</a>.
-                    <br /><br />
-                    (In the "Moving to Production" section of that link, don\'t worry
-                    about the steps they specify. All of that is handled by the plugin
-                    provided you have entered the correct merchant ID)
-                    <br /><br />
-                    <a href="#top">Back to top</a>
-                    <br /><br />
-                    </div>
-                    <div id="mid">
-                    <b>How do I find my Merchant ID?</b>
-                    <br /><br />
-                    Your Merchant ID can be found either in the top right hand
-                    side of your screen when you are logged into your Google
-                    Checkout account or under "Profile" in the Settings tab of
-                    your Google Checkout account. It will be a long (~15 digits)
-                    number.
-                    <br /><br />
-                    <a href="#top">Back to top</a>
-                    <br /><br />
-                    </div>
-                    <div id="currency">
-                    <b>What currency should I use?</b>
-                    <br /><br />
-                    I believe that Google Checkout only currently supports the
-                    UK and the US. I could be wrong. For now it is advised you use
-                    GBP if you are in the UK and USD if you are in the US. If you
-                    have any further info on this I\'d be glad to hear about it,
-                    my email is samwho@lbak.co.uk
-                    <br /><br />
-                    <a href="#top">Back to top</a>
-                    <br /><br />
-                    </div>
-                    <div id="addproduct">
-                    <b>How do I add a product to my blog?</b>
-                    <br /><br />
-                    To add a product to your database and then your blog there are
-                    a few easy steps:
-                    <br /><br />
-                    1. Click on "Add Products" at the top of this screen and fill out the
-                    form.
-                    <br />
-                    2. When you have filled the form out and clicked "Add", click on
-                    "View Products" at the top of this page, find the product you
-                    just added and click "Get Shortcode".
-                    <br />
-                    3. Paste this shortcode into a blog post and viola! If you have
-                    configured the plugin correctly then your users should now be
-                    able to purchase your product.
-                    <br /><br />
-                    <a href="#top">Back to top</a>
-                    <br /><br />
-                    </div>
-                    <div id="shortcode">
-                    <b>What is a shortcode and how do I use one?</b>
-                    <br /><br />
-                    A shortcode is a bit of text you can put in your posts that get
-                    filtered and changed into something useful. For example, a lot of
-                    forums use "bbcode" which stands for bulletin board code, which is
-                    a type of short code. They have tags like [b] for bold, [i] for
-                    italic and so on.
-                    <br /><br />
-                    LBAK Google Checkout uses its own shortcode system to let you
-                    easily post your products to your blog. Simply enter:
-                    <blockquote>
-                    [checkout product="1"]
-                    </blockquote>
-                    To post the product with an ID of 1 to your blog. The product
-                    attribute also supports lists of comma separated values for posting
-                    multiple products to your blog. Example:
-                    <blockquote>
-                    [checkout product="1, 2, 23, 5"]
-                    </blockquote>
-                    This will print out 4 products with the respective 1, 2, 23 and 5
-                    product IDs. Product also supports the "all" value which is seld explanatory .
-                    You can also print out everything in a category by
-                    specifying the category attribute:
-                    <blockquote>
-                    [checkout category="Example"]
-                    </blockquote>
-                    This will print out everything in the category "Example". You can
-                    combine this with the product attribute to print out items not in
-                    the specified category.
-                    <br /><br />
-                    Other attributes:<br />
-                    <b>price</b> - let\'s you specify pricing rules such as price=">20" will
-                    only print out products that cost more than 20 of whatever currency it
-                    is you are trading in. You can use >, <, >=, <= or specify a range
-                    like "x-y" with x and y being 2 numbers, eg "20-30". This can
-                    <b>only</b> be used in conjunction with product and or category. Just
-                    typing [checkout price="<20"] will show nothing, you would have to do
-                    [checkout product="all" price="<20"] to display all of your products
-                    under 20 of whatever currency you\'re trading in.
-                    <br /><br />
-                    <b>style</b> - The style attribute will apply CSS styles to the
-                    outer most div on the product. This is useful for specifying things like
-                    size: [checkout product="all" style="width: 50%"] for example.
-                    <br /><br />
-                    <a href="#top">Back to top</a>
-                    <br /><br />
-                    </div>
-                    <div id="help">
-                    <b>I\'m still confused :(</b>
-                    <br /><br />
-                    If the above Help/FAQ did not answer your needs you have a few
-                    options:<br /><br />
-                    1. Read the <a href="https://checkout.google.com/support/sell/" target="_blank">help section</a> on Google Checkout
-                    to see if they have answered your query.
-                    <br />
-                    2. Or email me: samwho@lbak.co.uk and I will try my best to get back to you ASAP. :)
-                    <br /><br />
-                    <a href="#top">Back to top</a>
-                    <br /><br />
-                    </div>', 'lbakgc'); ?>
+                <?php _e(lbakgc_get_web_page('http://lbak.co.uk/faq.php?step=get&tag=lbakgc'), 'lbakgc'); ?>
             </div>
         </div>
     </div>
@@ -898,10 +747,10 @@ function lbakgc_parse_currency($number, $options = null) {
     }
     if ($number) {
         if ($options['currency'] == 'GBP') {
-            return '£'.$number;
+            return '&#163'.$number;
         }
         else if ($options['currency'] == 'USD') {
-            return '$'.$number;
+            return '&#36;'.$number;
         }
         else {
             return $number;

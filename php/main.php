@@ -168,4 +168,64 @@ function lbakgc_do_post_request($url, $data, $optional_headers = null) {
     }
     return $response;
 }
+
+/**
+ * Get a web file (HTML, XHTML, XML, image, etc.) from a URL.
+ *
+ * Courtesy of:
+ * http://nadeausoftware.com/articles/2007/06/php_tip_how_get_web_page_using_curl
+ */
+function lbakgc_get_web_page( $url ) {
+    if (lbakgc_get_curl()) {
+        $options = array(
+                CURLOPT_RETURNTRANSFER => true,     // return web page
+                CURLOPT_HEADER         => false,    // don't return headers
+                CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+                CURLOPT_ENCODING       => "",       // handle all encodings
+                CURLOPT_USERAGENT      => "spider", // who am i
+                CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+                CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+                CURLOPT_TIMEOUT        => 120,      // timeout on response
+                CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+        );
+
+        $ch      = curl_init( $url );
+        curl_setopt_array( $ch, $options );
+        $content = curl_exec( $ch );
+        $err     = curl_errno( $ch );
+        $errmsg  = curl_error( $ch );
+        $header  = curl_getinfo( $ch );
+        curl_close( $ch );
+
+        if ($err != 0) {
+            return false;
+        }
+
+        return $content;
+    }
+    else if (lbakgc_get_allow_url_fopen()) {
+        return file_get_contents($url);
+    }
+    else {
+        return false;
+    }
+}
+
+function lbakgc_get_curl() {
+    if  (in_array('curl', get_loaded_extensions())) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+function lbakgc_get_allow_url_fopen() {
+    $allow_url_fopen = ini_get("allow_url_fopen");
+    if ($allow_url_fopen != "" && $allow_url_fopen != null) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 ?>
