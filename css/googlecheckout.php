@@ -1,10 +1,4 @@
-<?php
-    if (extension_loaded('zlib')) {
-        ob_start('ob_gzhandler');
-    }
-    header("Content-type: text/css");
-?>
-
+<?php header('Content-type: text/css'); ?>
 @charset "utf-8";
 /* CSS Document */
 
@@ -71,9 +65,3 @@
 .googlecart-add-button {
     margin: auto;
 }
-
-<?php
-    if (extension_loaded('zlib')) {
-        ob_end_flush();
-    }
-?>

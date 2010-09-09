@@ -371,8 +371,34 @@ function lbakgc_menu_options() {
 
                     $data['product_name'] = $_POST['product_name'];
                     $format[] = '%s';
-                    $data['product_price'] = $_POST['product_price'];
-                    $format[] = '%s';
+                    $data['multiple_pricings'] = $_POST['multiple_pricings'];
+                    $format[] = '%d';
+                    if (is_array($_POST['product_price'])) {
+                        $counter = 0;
+                        foreach ($_POST['product_price'] as $price) {
+                            $data['product_price'][$counter]['price'] = $price;
+                            $counter++;
+                        }
+                        $counter = 0;
+                        foreach ($_POST['product_price_desc'] as $description) {
+                            $data['product_price'][$counter]['description'] = $description;
+                            $counter++;
+                        }
+                        foreach ($data['product_price'] as $k => $item) {
+                            if ($item['price'] && $item['description']) {
+
+                            }
+                            else {
+                                unset($data['product_price'][$k]);
+                            }
+                        }
+                        $data['product_price'] = serialize($data['product_price']);
+                        $format[] = '%s';
+                    }
+                    else {
+                        $data['product_price'] = $_POST['product_price'];
+                        $format[] = '%s';
+                    }
                     $data['product_image'] = $_POST['product_image'];
                     $format[] = '%s';
                     $data['product_description'] = $_POST['product_description'];
@@ -415,7 +441,13 @@ function lbakgc_menu_options() {
                         You can still edit the values of the form boxes (name, description
                         etc.) for the purposes of your product list in the admin
                         menu but these will not be displayed when the product is
-                        displayed on your site.', 'lbakgc'); ?>
+                        displayed on your site.<br /><br />
+                        <b>Multiple Pricings: </b> If you want to have more than
+                        one price for a product, perhaps you offer it in different
+                        sizes, you can use the new multiple pricings option. Note
+                        that it won\'t preview unless you add at least 2 options.
+                        If you leave either of the Desc or Price fields blank, that
+                        entry will not be saved.', 'lbakgc'); ?>
                 </p>
             </div>
         </div>
@@ -482,6 +514,16 @@ function lbakgc_menu_options() {
                             </td>
                         </tr>
                         <tr>
+                            <td>
+                                <?php _e('Use multiple pricings?', 'lbakgc'); ?>
+                            </td>
+                            <td>
+                                <input type="hidden" name="multiple_pricings" value="0" />
+                                <input type="checkbox" name="multiple_pricings" id="multiple_pricings" value="1"
+                                       onclick="toggleMultiplePricings('document.forms.add_product'), updateProductPreview(document.forms.add_product)" />
+                            </td>
+                        </tr>
+                        <tr id="price">
                             <td>
                                 <?php _e('Price (in '.$options['currency'].')', 'lbakgc'); ?>
                             </td>
@@ -641,7 +683,16 @@ function lbakgc_admin_list_products() {
         $return .= '<td>'.$row->product_description.'</td>';
         $return .= '<td>'.lbakgc_img_thumb($row->product_image).'</td>';
         $return .= '<td>'.$row->product_category.'</td>';
-        $return .= '<td>'.lbakgc_parse_currency($row->product_price, $options).'</td>';
+        if (is_array(unserialize($row->product_price))) {
+            $return .= '<td>';
+            foreach (unserialize($row->product_price) as $data) {
+                $return .= $data['description'].' - '.lbakgc_parse_currency($data['price']).'<br />';
+            }
+            $return .= '</td>';
+        }
+        else {
+            $return .= '<td>'.lbakgc_parse_currency($row->product_price, $options).'</td>';
+        }
         $return .= '<td>'.lbakgc_parse_currency($row->product_shipping, $options).'</td>';
         $return .= '<td>'.$row->product_extra.'</td>';
         $return .= '<td>'.($row->in_stock ? '<span style="color: green;">Yes.</span>' : '<span style="color: red;">No.</span>').'</td>';
@@ -787,8 +838,32 @@ function lbakgc_edit_product($product_id) {
 
         $data['product_name'] = $_POST['product_name'];
         $format[] = '%s';
-        $data['product_price'] = $_POST['product_price'];
-        $format[] = '%s';
+        if (is_array($_POST['product_price'])) {
+            $counter = 0;
+            foreach ($_POST['product_price'] as $price) {
+                $data['product_price'][$counter]['price'] = $price;
+                $counter++;
+            }
+            $counter = 0;
+            foreach ($_POST['product_price_desc'] as $description) {
+                $data['product_price'][$counter]['description'] = $description;
+                $counter++;
+            }
+            foreach ($data['product_price'] as $k => $item) {
+                if ($item['price'] && $item['description']) {
+
+                }
+                else {
+                    unset($data['product_price'][$k]);
+                }
+            }
+            $data['product_price'] = serialize($data['product_price']);
+            $format[] = '%s';
+        }
+        else {
+            $data['product_price'] = $_POST['product_price'];
+            $format[] = '%s';
+        }
         $data['product_shipping'] = $_POST['product_shipping'];
         $format[] = '%s';
         $data['product_extra'] = $_POST['product_extra'];
@@ -879,11 +954,38 @@ function lbakgc_edit_product($product_id) {
                         </tr>
                         <tr>
                             <td>
+                                <?php _e('Use multiple pricings?', 'lbakgc'); ?>
+                            </td>
+                            <td>
+                                <input type="hidden" name="multiple_pricings" value="0" />
+                                <input type="checkbox" name="multiple_pricings" id="multiple_pricings" value="1"
+                                       onclick="toggleMultiplePricings('document.forms.edit_product'), updateProductPreview(document.forms.edit_product)"
+                                       <?php echo $row->multiple_pricings ? 'checked' : '' ?>/>
+                            </td>
+                        </tr>
+                        <tr id="price">
+                            <td>
                                 <?php _e('Price (in '.$options['currency'].')', 'lbakgc'); ?>
                             </td>
                             <td>
+                                <?php
+                                if (is_array(unserialize($row->product_price))) {
+                                    echo '<div id="prices">';
+                                    foreach (unserialize($row->product_price) as $data) {
+                                        echo '<div>Desc: <input type="text" name="product_price_desc[]"
+                                            id="desc'.$count.'" value="'.$data['description'].'" />
+                                                Price: <input type="text" name="product_price[]"
+                                            id="price'.$count.'" value="'.$data['price'].'" /></div>';
+                                    }
+                                    echo '</div><br /><a href="javascript:addPriceOption(\'document.forms.edit_product\');" class="button-primary">Add option</a><br /><br />';
+                                }
+                                else {
+                                ?>
                                 <input type="text" name="product_price" id="product_price"
                                        value="<?php echo $row->product_price; ?>" onkeyup="updateProductPreview(document.forms.edit_product)" />
+                                <?php
+                                }
+                                ?>
                             </td>
                         </tr>
                         <tr>
@@ -1015,7 +1117,18 @@ function lbakgc_get_product_box_no_query($row, $options, $style = null) {
         $image = $row->product_image ? '<img class="product-image" src="'.$row->product_image.'" />' : '';
         $name = $row->product_name ? '<div class="product_attribute"><span class="product_title"><span class="product-title">'.$row->product_name.'</span></span></div>' : '';
         $category = $row->product_category ? '<div class="product_attribute"><b>Category:</b> '.$row->product_category.'</div>' : '';
-        $price = $row->product_price ? '<div class="product_attribute"><b>Price:</b> <span class="product-price">'.lbakgc_parse_currency($row->product_price, $options).'</span></div>' : '';
+        if (is_array(unserialize($row->product_price))) {
+            $row->product_price = unserialize($row->product_price);
+            $price = '<div class="product_attribute"><div style="display: none;" class="product-price">'.$row->product_price[0]['price'].'</div><select class="product-attr-selection">';
+            foreach ($row->product_price as $data) {
+                $price .= '<option googlecart-set-product-price="'.$data['price'].'">
+                    '.$data['description'].' - '.lbakgc_parse_currency($data['price']).'</option>';
+            }
+            $price .= '</select></div>';
+        }
+        else {
+            $price = $row->product_price ? '<div class="product_attribute"><b>Price:</b> <span class="product-price">'.lbakgc_parse_currency($row->product_price, $options).'</span></div>' : '';
+        }
         $shipping = $row->product_shipping ? '<div class="product_attribute"><b>Shipping:</b> <span class="product-shipping">'.lbakgc_parse_currency($row->product_shipping, $options).'</span></div>' : '';
         $description = $row->product_description ? '<div class="product_attribute"><b>Description:</b> <span class="product-attr-description">'.nl2br($row->product_description).'</span></div>' : '';
         $extra = $row->product_extra ? '<div class="product_attribute"><b>Extra Info:</b> <span class="product-attr-extra">'.nl2br($row->product_extra).'</span></div>' : '';

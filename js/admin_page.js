@@ -1,5 +1,6 @@
 function updateProductPreview(form) {
     var target = document.getElementById('product_preview');
+    var multiple_pricings = document.getElementById('multiple_pricings');
 
     //This needs to be done because there is a hidden element with the same name.
     var in_stock = document.getElementById('in_stock');
@@ -42,8 +43,20 @@ function updateProductPreview(form) {
         if (form.product_category.value) {
             preview += '<div class="product_attribute">\n<b>Category:</b> \n'+form.product_category.value+'\n</div>\n';
         }
-        if (form.product_price.value) {
-            preview += '<div class="product_attribute">\n<b>Price:</b>\n <span class="product-price">\n'+form.product_price.value+'\n</span>\n</div>\n';
+        if (form.product_price || form.elements["product_price[]"]) {
+            if (multiple_pricings.checked) {
+                var price = form.elements["product_price[]"];
+                var description = form.elements["product_price_desc[]"];
+                preview += '<div style="display: none;" class="product-price">'+price[0].value+'</div>\n';
+                preview += '<div class="product_attribute"><select class="product-attr-selection">\n';
+                for (var i = 0; i < price.length; i++) {
+                    preview += '<option googlecart-set-product-price="'+price[i].value+'">'+description[i].value+' - '+price[i].value+'</option>\n';
+                }
+                preview += '</select></div>\n';
+            }
+            else {
+                preview += '<div class="product_attribute">\n<b>Price:</b>\n <span class="product-price">\n'+form.product_price.value+'\n</span>\n</div>\n';
+            }
         }
         if (form.product_shipping.value) {
             preview += '<div class="product_attribute">\n<b>Shipping:</b>\n <span class="product-shipping">\n'+form.product_shipping.value+'\n</span>\n</div>\n';
@@ -114,3 +127,29 @@ function displayShortcode(id) {
     prompt('Paste this shortcode into a blog post to display your product:',
     '[checkout product="'+id+'"]');
 }
+
+function toggleMultiplePricings(form) {
+    var box = document.getElementById('multiple_pricings');
+    var tr = document.getElementById('price');
+    if (!box.checked) {
+        tr.innerHTML =
+            '<td>Price</td><td><input type="text" name="product_price" \n\
+                id="product_price" onkeyup="updateProductPreview('+form+')" /></td>';
+    }
+    else {
+        tr.innerHTML = '<td>Price Options</td>\n\
+<td><div id="prices">Desc: <input type="text" name="product_price_desc[]" onkeyup="updateProductPreview('+form+')" /> Price: <input type="text" name="product_price[]" onkeyup="updateProductPreview('+form+')" /><br /></div>\n\
+<br /><a href="javascript:addPriceOption(\''+form+'\');" class="button-primary">Add option</a><br /><br /></td>';
+    }
+}
+
+function addPriceOption(form) {
+    var elem = document.createElement('span');
+    var text = 'Desc: <input type="text" name="product_price_desc[]" onkeyup="updateProductPreview('+form+')" /> Price: <input type="text" name="product_price[]" onkeyup="updateProductPreview('+form+')" /><br />';
+    elem.innerHTML = text;
+    document.getElementById('prices').appendChild(elem);
+}
+
+function is_string(input){
+    return typeof(input)=='string';
+  }

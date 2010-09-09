@@ -36,6 +36,7 @@ function lbakgc_activation_setup() {
             product_extra text NOT NULL,
             product_shipping text NOT NULL,
             product_category text NOT NULL,
+            multiple_pricings tinyint NOT NULL,
             in_stock tinyint NOT NULL,
             use_custom tinyint NOT NULL,
             custom text NOT NULL,

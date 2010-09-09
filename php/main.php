@@ -29,7 +29,7 @@ function lbakgc_add_header() {
     }
 
     echo '<link rel="stylesheet" type="text/css" 
-        href="'.lbakgc_get_base_url().'/css/googlecheckout.css.php?iw='.$options['image-width'].'&ih='.$options['image-height'].'&pw='.$options['product-width'].'&ph='.$options['product-height'].'" />';
+        href="'.lbakgc_get_base_url().'/css/googlecheckout.php?iw='.$options['image-width'].'&ih='.$options['image-height'].'&pw='.$options['product-width'].'&ph='.$options['product-height'].'" />';
     echo '<link rel="stylesheet" type="text/css" href="'.lbakgc_get_base_url().'/css/wp_head.css" />';
 }
 
