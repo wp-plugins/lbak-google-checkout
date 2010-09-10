@@ -85,7 +85,7 @@ function lbakgc_menu_options() {
                     $options['image-height'] = $wpdb->escape($_POST['image-height']);
                     $options['product-width'] = $wpdb->escape($_POST['product-width']);
                     $options['product-height'] = $wpdb->escape($_POST['product-height']);
-
+                    $options['title-colour'] = $wpdb->escape($_POST['title-colour']);
 
                     lbakgc_update_options($options);
                     echo '<div class="updated">LBAK Google Checkout settings updated!
@@ -335,6 +335,22 @@ function lbakgc_menu_options() {
                         </tr>
                         <tr>
                             <td>
+                                <label for="title-colour">
+                                    <b><?php _e('Product name colour', 'lbakgc'); ?></b>
+                                </label>
+                            </td>
+                            <td>
+                                <input type="text" name="title-colour" id="title-colour"
+                                       value="<?php echo $options['title-colour']; ?>" />
+                            </td>
+                            <td>
+                                <?php _e('The colour of the title text when
+                                    displaying your products.'
+                                        , 'lbakgc'); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <label for="settings_submit">
                                     <b>Submit</b>
                                 </label>
@@ -360,11 +376,6 @@ function lbakgc_menu_options() {
                 <?php
                 break;
             case 'addproducts':
-                /*
-                 * Need to output the max width and height of images here because
-                 * the javascript can't use the PHP function used to generate
-                 * the thumbnails.
-                 */
                 if (isset($_POST['add_product_submit'])) {
                     $data = array();
                     $format = array();
@@ -633,9 +644,6 @@ function lbakgc_menu_options() {
         </div>
     </div>
                 <?php
-                    break;
-                case 'deleteproduct':
-
                     break;
         } //end switch
         ?>

@@ -40,7 +40,9 @@ function lbakgc_activation_setup() {
             in_stock tinyint NOT NULL,
             use_custom tinyint NOT NULL,
             custom text NOT NULL,
-            PRIMARY KEY (product_id)
+            PRIMARY KEY (product_id),
+            KEY categroy (product_category(12)),
+            KEY price (product_price)
         );
             ";
 
@@ -71,7 +73,8 @@ function lbakgc_activation_setup() {
         'image-width' => '200px',
         'image-height' => '200px',
         'product-width' => '100%',
-        'product-height' => '100%'
+        'product-height' => '100%',
+        'title-colour' => '#ff8800'
     );
 
     //BEGIN OPTION INITIALISATION LOOP

@@ -26,7 +26,7 @@
 .product_title {
     font-weight: bold;
     font-size: 18px;
-    color: #ff8800;
+    color: <?php echo $_GET['tc'] ?>;
 }
 
 .product hr {

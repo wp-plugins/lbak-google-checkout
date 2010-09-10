@@ -29,7 +29,9 @@ function lbakgc_add_header() {
     }
 
     echo '<link rel="stylesheet" type="text/css" 
-        href="'.lbakgc_get_base_url().'/css/googlecheckout.php?iw='.$options['image-width'].'&ih='.$options['image-height'].'&pw='.$options['product-width'].'&ph='.$options['product-height'].'" />';
+        href="'.lbakgc_get_base_url().'/css/googlecheckout.php?iw='.urlencode($options['image-width']).'
+            &ih='.urlencode($options['image-height']).'&pw='.urlencode($options['product-width']).'&ph='.urlencode($options['product-height']).'
+                &tc='.urlencode($options['title-colour']).'" />';
     echo '<link rel="stylesheet" type="text/css" href="'.lbakgc_get_base_url().'/css/wp_head.css" />';
 }
 
