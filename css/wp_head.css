@@ -1,0 +1,34 @@
+.lbakgc_pages {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 10px;
+}
+.lbakgc_pages a {
+    color: white;
+    text-decoration: none;
+}
+.lbakgc_pages a:hover {
+    background: #777777;
+}
+
+.lbakgc_page {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #999999;
+    border: 1px solid #444444;
+    color: white;
+    text-decoration: none;
+    margin: 2px;
+}
+
+.lbakgc_page_selected {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #555555;
+    border: 1px solid #444444;
+    color: white;
+    text-decoration: none;
+    margin: 2px;
+}
