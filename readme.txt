@@ -6,7 +6,7 @@ Donate link: http://donate.lbak.co.uk/
 Tags: e-commerce, google, checkout, sell, products, easy
 Requires at least: 3.0.1
 Tested up to: 3.0.1
-Stable tag: 1.2
+Stable tag: 1.2.1
 
 A simple, easy to use Google Checkout integration WordPress plugin.
 
