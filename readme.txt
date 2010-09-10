@@ -66,6 +66,12 @@ http://lbak.co.uk/faq.php?step=get&tag=lbakgc
 
 == Changelog ==
 
+= 1.2.1 =
+
+* Another CSS bug fix. Who knows, it might work this time.
+* Added another setting to the settings panel. The ability to change the title
+colour for products.
+
 = 1.2 =
 
 * Potential bug fix loading CSS.
