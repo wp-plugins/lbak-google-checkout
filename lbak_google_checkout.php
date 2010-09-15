@@ -5,7 +5,7 @@
     Donate link: http://donate.lbak.co.uk/
     Description: An easy to use plugin that integrates Google Checkout into your blog.
     Author: Sam Rose
-    Version: 1.2.1
+    Version: 1.2.2
     Author URI: http://lbak.co.uk/
 */
 
