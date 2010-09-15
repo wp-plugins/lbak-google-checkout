@@ -40,9 +40,7 @@ function lbakgc_activation_setup() {
             in_stock tinyint NOT NULL,
             use_custom tinyint NOT NULL,
             custom text NOT NULL,
-            PRIMARY KEY (product_id),
-            KEY categroy (product_category(12)),
-            KEY price (product_price)
+            PRIMARY KEY (product_id)
         );
             ";
 
