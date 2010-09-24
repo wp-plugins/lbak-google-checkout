@@ -22,7 +22,7 @@
 */
 
 /*
- * Get the base directory for this current plugon.
+ * Get the base directory for this current plugin.
 */
 function lbakgc_get_base_url() {
     return WP_PLUGIN_URL. '/'. basename(dirname(__FILE__));
