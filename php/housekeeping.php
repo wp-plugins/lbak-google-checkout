@@ -36,11 +36,14 @@ function lbakgc_activation_setup() {
             product_extra text NOT NULL,
             product_shipping text NOT NULL,
             product_category text NOT NULL,
+            user_input text NOT NULL,
             multiple_pricings tinyint NOT NULL,
             in_stock tinyint NOT NULL,
             use_custom tinyint NOT NULL,
             custom text NOT NULL,
-            PRIMARY KEY (product_id)
+            PRIMARY KEY (product_id),
+            KEY category (product_category(12)),
+            KEY price (product_price(4))
         );
             ";
 
@@ -49,6 +52,7 @@ function lbakgc_activation_setup() {
         dbDelta($create_product_table_sql);
     }
     else {
+        lbakgc_log('No dbDelta function detected.', __FILE__.':'.__LINE__, 'urgent');
         if ($db_product_table_exists) {
             //This is a temporary solution to the dbDelta function not existing.
             $wpdb->query("DROP TABLE $product_table_name");
@@ -57,6 +61,7 @@ function lbakgc_activation_setup() {
     }
 
     $option_default = array(
+        'version' => lbakgc_get_version(),
         'product_table_name' => $product_table_name,
         'productWeightUnits' => 'KG', //Google has this for some reason
         'merchant_id' => 'unset',
@@ -72,7 +77,8 @@ function lbakgc_activation_setup() {
         'image-height' => '200px',
         'product-width' => '100%',
         'product-height' => '100%',
-        'title-colour' => '#ff8800'
+        'title-colour' => '#ff8800',
+        'log' => true
     );
 
     //BEGIN OPTION INITIALISATION LOOP
@@ -107,6 +113,7 @@ function lbakgc_activation_setup() {
     //Add AND update to account for the plugin already being there.
     add_option('lbakgc_options', null, null, 'no');
     lbakgc_update_options($options);
+    lbakgc_log('Plugin activated.');
 }
 
 function lbakgc_uninstall() {
@@ -127,18 +134,32 @@ function lbakgc_uninstall() {
 
     //Erase options field in the settings table.
     lbakgc_delete_options();
+    lbakgc_log('Plugin uninstalled.');
+}
+
+function lbakgc_deactivate() {
+    lbakgc_log('Plugin deactivated.');
 }
 
 /*
  * Functions to get, delete and update the lbakgc options.
  */
 function lbakgc_get_options() {
-    return get_option('lbakgc_options');
+    global $lbakgc_options;
+    if (!isset($lbakgc_options)) {
+        $lbakgc_options = get_option('lbakgc_options');
+    }
+    return $lbakgc_options;
 }
 function lbakgc_update_options($options) {
-    return update_option('lbakgc_options', $options);
+    global $lbakgc_options;
+    update_option('lbakgc_options', $options);
+    $lbakgc_options = $options;
+    return $lbakgc_options;
 }
 function lbakgc_delete_options() {
+    global $lbakgc_options;
+    unset($lbakgc_options);
     return delete_option('lbakgc_options');
 }
 ?>

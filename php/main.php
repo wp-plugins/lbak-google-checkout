@@ -35,6 +35,12 @@ function lbakgc_add_header() {
     echo '<link rel="stylesheet" type="text/css" href="'.lbakgc_get_base_url().'/css/wp_head.css" />';
 }
 
+function lbakgc_add_scripts() {
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('lbakgc_admin_script', lbakgc_get_base_url() . '/js/admin_page.js');
+    wp_enqueue_script('jquery-tooltip', 'http://cdn.jquerytools.org/1.2.4/jquery.tools.min.js');
+}
+
 /*
  * Replaces the [checkout] short codes with their appropriate form code.
 */
@@ -145,32 +151,6 @@ function lbakgc_process_shortcode($shortcode) {
     return $return;
 }
 
-/*
- * Function pasted from
- * http://wezfurlong.org/blog/2006/nov/http-post-from-php-without-curl
- *
- * Executes an HTTP POST request. Duh.
- */
-function lbakgc_do_post_request($url, $data, $optional_headers = null) {
-    $params = array('http' => array(
-                    'method' => 'POST',
-                    'content' => $data
-    ));
-    if ($optional_headers !== null) {
-        $params['http']['header'] = $optional_headers;
-    }
-    $ctx = stream_context_create($params);
-    $fp = @fopen($url, 'rb', false, $ctx);
-    if (!$fp) {
-        throw new Exception("Problem with $url, $php_errormsg");
-    }
-    $response = @stream_get_contents($fp);
-    if ($response === false) {
-        throw new Exception("Problem reading data from $url, $php_errormsg");
-    }
-    return $response;
-}
-
 /**
  * Get a web file (HTML, XHTML, XML, image, etc.) from a URL.
  *
@@ -178,7 +158,10 @@ function lbakgc_do_post_request($url, $data, $optional_headers = null) {
  * http://nadeausoftware.com/articles/2007/06/php_tip_how_get_web_page_using_curl
  */
 function lbakgc_get_web_page( $url ) {
-    if (lbakgc_get_curl()) {
+    if (lbakgc_get_allow_url_fopen()) {
+        return file_get_contents($url);
+    }
+    else if (lbakgc_get_curl()) {
         $options = array(
                 CURLOPT_RETURNTRANSFER => true,     // return web page
                 CURLOPT_HEADER         => false,    // don't return headers
@@ -205,9 +188,6 @@ function lbakgc_get_web_page( $url ) {
 
         return $content;
     }
-    else if (lbakgc_get_allow_url_fopen()) {
-        return file_get_contents($url);
-    }
     else {
         return false;
     }
@@ -229,5 +209,47 @@ function lbakgc_get_allow_url_fopen() {
     else {
         return false;
     }
+}
+
+/**
+ * This function sends off a log entry to my log API on lbak.co.uk
+ * It respects the fact that some people may not want to submit data about
+ * their usage to me and there is an option to turn it off in the settings.
+ *
+ * When using this function is it necessary to submit an $origin as the second
+ * argument. This HAS TO BE __FILE__.':'.__LINE__ so that I know where the
+ * log occurred.
+ */
+function lbakgc_log($message, $origin = null, $type = "message", $override = false) {
+    $options = lbakgc_get_options();
+    if (($options['log'] != false && $message != null) || $override) {
+        $message .= ' (lbakgc wp plugin v' . lbakgc_get_version().')';
+        $url = 'http://lbak.co.uk/log.php?step=new';
+        $url .= '&message=' . urlencode($message) . '&url=' .
+            urlencode($_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] .
+            $_SERVER['QUERY_STRING']) . '&phpver=' . phpversion() .
+        '&origin=' . urlencode($origin) .
+        '&post_vars=' . lbakgc_get_post_vars() .'&type='.$type.'&tag=lbakgc';
+        if (($result = lbakgc_get_web_page($url))) {
+            return $result;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+/*
+ * Formats the post variables like a query string (the get variables).
+ */
+function lbakgc_get_post_vars() {
+    $postvars = "";
+    foreach ($_POST as $v => $p) {
+        if (is_array($p))
+            $p = join(",", $p);
+        $postvars .= "$v=$p&";
+    }
+    return $postvars;
 }
 ?>

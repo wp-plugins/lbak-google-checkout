@@ -4,9 +4,9 @@ Author: Sam Rose
 Author URL: http://lbak.co.uk/
 Donate link: http://donate.lbak.co.uk/
 Tags: e-commerce, google, checkout, sell, products, easy
-Requires at least: 3.0.1
+Requires at least: 3.0
 Tested up to: 3.0.1
-Stable tag: 1.2.2
+Stable tag: 1.3
 
 A simple, easy to use Google Checkout integration WordPress plugin.
 
@@ -65,6 +65,21 @@ The frequently asked questions can be found either inside the plugin or at
 http://lbak.co.uk/faq.php?step=get&tag=lbakgc
 
 == Changelog ==
+
+= 1.3 =
+
+* Added a variety of validation checking to stop false reports of success from
+happening.
+* Added the ability to add a User Input field to your products (useful for
+adding fields such as engravings)
+* Internal file restructuring to help with readability.
+* Added in usage tracking to help with debugging in future. There is an opt-out
+option on the settings page.
+* Made the Help/FAQ still load if your server does not have cURL loaded or
+allow_url_fopen set.
+*Added some more indexes to the database to allow for faster load times when
+displaying products.
+* Removed some deprecated files that were causing errors on some systems.
 
 = 1.2.2 =
 

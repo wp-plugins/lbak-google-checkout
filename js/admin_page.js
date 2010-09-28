@@ -69,6 +69,10 @@ function updateProductPreview(form) {
             var extra = form.product_extra.value.replace(/\n/g, '<br />\n');
             preview += '\n<div class="product_attribute">\n<b>Extra Info:</b> \n<span class="product-attr-extra">\n'+extra+'\n</span>\n</div>\n';
         }
+        if (form.user_input.value) {
+            var attrname = 'product-attr-' + form.user_input.value.toLowerCase().replace(/\ /g, '-');
+            preview += '<div class="product_attribute">\n<b>' + form.user_input.value + ':</b> <input type="text" class="' + attrname + '" />\n';
+        }
 
         //Display the "Add to cart" button only if the product is in stock.
         if (in_stock.checked) {
@@ -100,7 +104,7 @@ function toggleCheckbox(form, target) {
     var in_stock = document.getElementById('in_stock');
     if (use_custom.checked) {
         t.style.display = 'table-row';
-        /*
+    /*
         for (var i = 0; i < form.elements.length; i++) {
             if (form.elements[i] != use_custom && form.elements[i] != form.custom && form.elements[i] != in_stock) {
                 form.elements[i].disabled = true;
@@ -111,7 +115,7 @@ function toggleCheckbox(form, target) {
     }
     else {
         t.style.display = 'none';
-        /*
+    /*
         for (var i = 0; i < form.elements.length; i++) {
             if (form.elements[i] != use_custom && form.elements[i] != form.custom && form.elements[i] != in_stock) {
                 form.elements[i].disabled = false;
@@ -125,7 +129,7 @@ function toggleCheckbox(form, target) {
 
 function displayShortcode(id) {
     prompt('Paste this shortcode into a blog post to display your product:',
-    '[checkout product="'+id+'"]');
+        '[checkout product="'+id+'"]');
 }
 
 function toggleMultiplePricings(form) {
@@ -133,7 +137,7 @@ function toggleMultiplePricings(form) {
     var tr = document.getElementById('price');
     if (!box.checked) {
         tr.innerHTML =
-            '<td>Price</td><td><input type="text" name="product_price" \n\
+        '<td>Price</td><td><input type="text" name="product_price" \n\
                 id="product_price" onkeyup="updateProductPreview('+form+')" /></td>';
     }
     else {
@@ -152,4 +156,8 @@ function addPriceOption(form) {
 
 function is_string(input){
     return typeof(input)=='string';
-  }
+}
+
+jQuery(document).ready(function(){
+    jQuery('.lbakgc_help[title]').tooltip({'position': 'center right', 'tipClass': 'lbakgc_tooltip'});
+})
