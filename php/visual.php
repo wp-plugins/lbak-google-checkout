@@ -164,7 +164,7 @@ function lbakgc_parse_currency($number, $options = null) {
     }
     if ($number) {
         if ($options['currency'] == 'GBP') {
-            return '&#163' . $number;
+            return '&#163;' . $number;
         } else if ($options['currency'] == 'USD') {
             return '&#36;' . $number;
         } else {
