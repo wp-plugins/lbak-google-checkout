@@ -7,6 +7,7 @@ if ($_GET['step'] != 'deleteproduct') {
  * This function is currently really messy but it handles everything to do
  * with editing products.
  */
+
 function lbakgc_edit_product($product_id) {
     //Check that the user is able to view this page.
     if (!current_user_can('manage_options')) {
@@ -50,6 +51,21 @@ function lbakgc_edit_product($product_id) {
             $data['product_price'] = $_POST['product_price'];
             $format[] = '%s';
         }
+
+        if ($_POST['custom_dropdown_name']) {
+            $data['custom_dropdown'][] = $_POST['custom_dropdown_name'];
+            foreach ($_POST['custom_dropdown_option'] as $v) {
+                if ($v) {
+                    $data['custom_dropdown'][] = $v;
+                }
+            }
+            $data['custom_dropdown'] = serialize($data['custom_dropdown']);
+            $format[] = '%s';
+        } else {
+            $data['custom_dropdown'] = "";
+            $format[] = '%s';
+        }
+
         $data['product_shipping'] = $_POST['product_shipping'];
         $format[] = '%s';
         $data['product_extra'] = $_POST['product_extra'];
@@ -74,8 +90,7 @@ function lbakgc_edit_product($product_id) {
 
         if ($wpdb->update($options['product_table_name'], $data, $where, $format, $where_format)) {
             echo '<div class="updated">Updated product "' . $_POST['product_name'] . '"!</div>';
-        }
-        else {
+        } else {
             lbakgc_log('Failed to edit product.', null, 'urgent');
             echo '<div class="error">Failed to update product "' . $data['product_name'] . '"
             to the database. Please try again. If this problem persists please
@@ -85,9 +100,9 @@ function lbakgc_edit_product($product_id) {
     } else {
         $row = lbakgc_stripslashes_product($wpdb->get_row('SELECT * FROM `' . $options['product_table_name'] . '` WHERE `product_id`=' . $product_id));
 ?>
-<noscript>
-    <div class="error">
-        <?php _e('You are viewing this page without Javascript enabled. This page relies
+        <noscript>
+            <div class="error">
+<?php _e('You are viewing this page without Javascript enabled. This page relies
         heavily on the use of Javascript to function. Attempting to use this
         page without Javascript may have unexpected results and is generally
         not encouraged. Please switch to a browser that has Javascript enabled
@@ -95,23 +110,23 @@ function lbakgc_edit_product($product_id) {
         this page.', 'lbakgc'); ?>
     </div>
 </noscript>
-        <div id="poststuff" class="ui-sortable meta-box-sortable" style="width: 50%; float: left;">
-            <div class="postbox">
-                <h3><?php _e('Edit a Product', 'lbakgc'); ?></h3>
-                <div class="inside">
-                    <form action="?page=lbakgc&step=editproduct&id=<?php echo $product_id; ?>" method="post" name="edit_product">
-                        <table class="widefat">
-                            <thead>
-                            <th>Option</th>
-                            <th>Value</th>
-                            </thead>
-                            <tr>
-                                <td>
+<div id="poststuff" class="ui-sortable meta-box-sortable" style="width: 50%; float: left;">
+    <div class="postbox">
+        <h3><?php _e('Edit a Product', 'lbakgc'); ?></h3>
+        <div class="inside">
+            <form action="?page=lbakgc&step=editproduct&id=<?php echo $product_id; ?>" method="post" name="edit_product">
+                <table class="widefat">
+                    <thead>
+                    <th>Option</th>
+                    <th>Value</th>
+                    </thead>
+                    <tr>
+                        <td>
 <?php _e('Name', 'lbakgc'); ?>
-                                </td>
-                                <td>
-                                    <input type="text" name="product_name" id="product_name"
-                                           value="<?php echo $row->product_name; ?>" onkeyup="updateProductPreview(document.forms.edit_product)"/>
+                        </td>
+                        <td>
+                            <input type="text" name="product_name" id="product_name"
+                                   value="<?php echo $row->product_name; ?>" onkeyup="updateProductPreview(document.forms.edit_product)"/>
                         </td>
                     </tr>
                     <tr>
@@ -165,10 +180,62 @@ function lbakgc_edit_product($product_id) {
                         </td>
                         <td>
                             <input type="text" name="user_input"
-                                      id="user_input"
-                                      onkeyup="updateProductPreview(document.forms.edit_product)"
-                                      value="<?php echo $row->user_input; ?>"/>
+                                   id="user_input"
+                                   onkeyup="updateProductPreview(document.forms.edit_product)"
+                                   value="<?php echo $row->user_input; ?>"/>
                         </td>
+                    </tr>
+                    <tr>
+                        <?php if (!$row->custom_dropdown) { ?>
+                        <td>
+                            <br />
+                            <a class="button-primary"
+                               href="javascript:addDropdown('document.forms.edit_product')"
+                               id="add_dropdown_button"><?php _e('Add custom dropdown', 'lbakgc'); ?></a>
+                            <br />
+                            <br />
+<?php _e('<a href="#" class="lbakgc_help" title="Adding a custom
+                                dropdown box gives you the ability to allow users to
+                                specify an extra option such as colour or men\'s/women\'s">(What\'s this?)</a>', 'lbakgc'); ?>
+                        </td>
+                        <td id="custom_dropdown">
+
+                        </td>
+                        <?php
+                        }
+                        else {
+                            $custom_dropdown = unserialize($row->custom_dropdown);
+                            ?>
+                            <td>
+                            <br />
+                            <a class="button-primary"
+                               href="javascript:removeDropdown('document.forms.edit_product')"
+                               id="add_dropdown_button"><?php _e('Remove custom dropdown', 'lbakgc'); ?></a>
+                            <br />
+                            <br />
+<?php _e('<a href="#" class="lbakgc_help" title="Adding a custom
+                                dropdown box gives you the ability to allow users to
+                                specify an extra option such as colour or men\'s/women\'s">(What\'s this?)</a>', 'lbakgc'); ?>
+                            </td>
+                            <td>
+                                <div id="custom_dropdown">
+                            <?php
+                            _e('Title<br /><input type="text" name="custom_dropdown_name"
+                                value="'.$custom_dropdown[0].'" /><br />Options<br />
+                                    <div id="custom_dropdown_options">', 'lbakgc');
+                            for ($i = 1; $i < sizeof($custom_dropdown); $i++) {
+                                echo '<input type="text" name="custom_dropdown_option[]"
+                                    value="'.$custom_dropdown[$i].'" /><br />';
+                            }
+                            echo "</div><br /><a class='button-primary'
+                                href='javascript:addDropdownOption(\"document.forms.edit_product\")'>
+                                Add option</a><br /><br />";
+                            ?>
+                                </div>
+                            </td>
+                            <?php
+                        }
+                        ?>
                     </tr>
                     <tr>
                         <td>
@@ -187,21 +254,21 @@ function lbakgc_edit_product($product_id) {
                         </td>
                         <td>
 <?php
-        if (is_array(unserialize($row->product_price))) {
-            echo '<div id="prices">';
-            foreach (unserialize($row->product_price) as $data) {
-                echo '<div>Desc: <input type="text" name="product_price_desc[]"
+                            if (is_array(unserialize($row->product_price))) {
+                                echo '<div id="prices">';
+                                foreach (unserialize($row->product_price) as $data) {
+                                    echo '<div>Desc: <input type="text" name="product_price_desc[]"
                                             id="desc' . $count . '" value="' . $data['description'] . '" />
                                                 Price: <input type="text" name="product_price[]"
                                             id="price' . $count . '" value="' . $data['price'] . '" /></div>';
-            }
-            echo '</div><br /><a href="javascript:addPriceOption(\'document.forms.edit_product\');" class="button-primary">Add option</a><br /><br />';
-        } else {
+                                }
+                                echo '</div><br /><a href="javascript:addPriceOption(\'document.forms.edit_product\');" class="button-primary">Add option</a><br /><br />';
+                            } else {
 ?>
-                            <input type="text" name="product_price" id="product_price"
-                                   value="<?php echo $row->product_price; ?>" onkeyup="updateProductPreview(document.forms.edit_product)" />
+                                <input type="text" name="product_price" id="product_price"
+                                       value="<?php echo $row->product_price; ?>" onkeyup="updateProductPreview(document.forms.edit_product)" />
 <?php
-                        }
+                            }
 ?>
                         </td>
                     </tr>
@@ -275,6 +342,6 @@ function lbakgc_edit_product($product_id) {
     toggleCheckbox(document.forms.edit_product, 'custom_html');
 </script>
 <?php
+                        }
                     }
-                }
 ?>

@@ -41,6 +41,9 @@ function lbakgc_activation_setup() {
             in_stock tinyint NOT NULL,
             use_custom tinyint NOT NULL,
             custom text NOT NULL,
+            custom_dropdown text NOT NULL,
+            use_color tinyint NOT NULL,
+            product_color text NOT NULL,
             PRIMARY KEY (product_id),
             KEY category (product_category(12)),
             KEY price (product_price(4))

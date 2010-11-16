@@ -29,6 +29,7 @@ function lbakgc_admin_list_products() {
         <th>Shipping</th>
         <th>Extra Info</th>
         <th>User Input</th>
+        <th>Custom Dropdown</th>
         <th>In Stock?</th>
         <th>Custom HTML?</th>
         <th>Options</th>
@@ -53,6 +54,17 @@ function lbakgc_admin_list_products() {
         $return .= '<td>' . lbakgc_parse_currency($row->product_shipping, $options) . '</td>';
         $return .= '<td>' . $row->product_extra . '</td>';
         $return .= '<td>'.$row->user_input.'</td>';
+        $custom_dropdown = unserialize($row->custom_dropdown);
+        if ($custom_dropdown) {
+            $return .= '<td><b>' . $custom_dropdown[0] . '</b><br />';
+            for ($i = 1; $i < sizeof($custom_dropdown); $i++) {
+                $return .= $custom_dropdown[$i].'<br />';
+            }
+            $return .= '</td>';
+        }
+        else {
+            $return .= '<td></td>';
+        }
         $return .= '<td>' . ($row->in_stock ? '<span style="color: green;">Yes.</span>' : '<span style="color: red;">No.</span>') . '</td>';
         $return .= '<td>' . ($row->use_custom ? '<span style="color: green;">Yes.</span>' : '<span style="color: red;">No.</span>') . '</td>';
         $return .= '<td><a href="tools.php?page=lbakgc&step=editproduct&id=' . $row->product_id . '">Edit</a> |

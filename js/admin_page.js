@@ -73,18 +73,31 @@ function updateProductPreview(form) {
             var attrname = 'product-attr-' + form.user_input.value.toLowerCase().replace(/\ /g, '-');
             preview += '<div class="product_attribute">\n<b>' + form.user_input.value + ':</b> <input type="text" class="' + attrname + '" />\n';
         }
+        if (form.custom_dropdown_name && form.elements["custom_dropdown_option[]"]) {
+            var dropdown_name = 'product-attr-' + form.custom_dropdown_name.value.toLowerCase().replace(/\ /g, '-');
+            preview += '<div class="product_attribute">\n<b>' + form.custom_dropdown_name.value + ':</b> \n\
+                <select class="' + dropdown_name + '" />\n';
+            var option = form.elements["custom_dropdown_option[]"];
+            for (var i = 0; i < option.length; i++) {
+                preview += '<option>'+option[i].value+'</option>\n';
+            }
+            preview += '</select></div>';
+
+        }
 
         //Display the "Add to cart" button only if the product is in stock.
         if (in_stock.checked) {
             preview += '<div role="button" alt="Add to cart" tabindex="0" class="googlecart-add-button"></div>\n';
         }
-
-        preview += '</div>\n'; //close the product class div
+        preview += '</div>\n'; //close the product info class div
     }
+
+    preview += '</div>\n'; //close the product class div
 
     //Update the custom HTML form field if the product is in stock and the custom
     //HTML form field is not currently in focus.
-    if (document.activeElement != form.custom && in_stock.checked) {
+    if (document.activeElement != form.custom && in_stock.checked &&
+        !document.getElementById('use_custom').checked) {
         form.custom.value = preview;
     }
 
@@ -158,6 +171,39 @@ function is_string(input){
     return typeof(input)=='string';
 }
 
+function addDropdown(form) {
+    document.getElementById('add_dropdown_button').setAttribute("href", "javascript:removeDropdown(\""+form+"\")");
+    document.getElementById('add_dropdown_button').innerHTML = "Remove custom dropdown";
+    var div = document.getElementById('custom_dropdown');
+    var newDiv = document.createElement("div");
+    newDiv.innerHTML = "Title<br /><input name='custom_dropdown_name' type='text' onkeyup='updateProductPreview("+form+")' /><br />\n\
+        <br />Option list<br />\n\
+        <div id='custom_dropdown_options'>\n\
+        <input type='text' name='custom_dropdown_option[]' onkeyup='updateProductPreview("+form+")' /><br />\n\
+        <input type='text' name='custom_dropdown_option[]' onkeyup='updateProductPreview("+form+")' /><br />\n\
+        </div>\n\
+        <br /><a class='button-primary' href='javascript:addDropdownOption(\""+form+"\")'>Add option</a><br /><br />";
+
+    div.appendChild(newDiv);
+}
+
+function addDropdownOption(form) {
+    var div = document.getElementById('custom_dropdown_options');
+    var elem = document.createElement("span");
+    elem.innerHTML = "<input type='text' name='custom_dropdown_option[]' onkeyup='updateProductPreview("+form+")' /><br />";
+    div.appendChild(elem);
+}
+
+function removeDropdown(form) {
+    var div = document.getElementById('custom_dropdown');
+    div.innerHTML = "";
+    document.getElementById('add_dropdown_button').setAttribute("href", "javascript:addDropdown(\""+form+"\")");
+    document.getElementById('add_dropdown_button').innerHTML = "Add custom dropdown";
+}
+
 jQuery(document).ready(function(){
-    jQuery('.lbakgc_help[title]').tooltip({'position': 'center right', 'tipClass': 'lbakgc_tooltip'});
+    jQuery('.lbakgc_help[title]').tooltip({
+        'position': 'center right',
+        'tipClass': 'lbakgc_tooltip'
+    });
 })

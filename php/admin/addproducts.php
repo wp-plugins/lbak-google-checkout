@@ -31,6 +31,22 @@ if (isset($_POST['add_product_submit'])) {
         $data['product_price'] = $_POST['product_price'];
         $format[] = '%s';
     }
+
+    if ($_POST['custom_dropdown_name']) {
+        $data['custom_dropdown'][] = $_POST['custom_dropdown_name'];
+        foreach ($_POST['custom_dropdown_option'] as $v) {
+            if ($v) {
+                $data['custom_dropdown'][] = $v;
+            }
+        }
+        $data['custom_dropdown'] = serialize($data['custom_dropdown']);
+        $format[] = '%s';
+    }
+    else {
+        $data['custom_dropdown'] = "";
+        $format[] = '%s';
+    }
+
     $data['product_image'] = $_POST['product_image'];
     $format[] = '%s';
     $data['product_description'] = $_POST['product_description'];
@@ -173,6 +189,22 @@ if (isset($_POST['add_product_submit'])) {
                             <input type="text" name="user_input"
                                       id="user_input"
                                       onkeyup="updateProductPreview(document.forms.add_product)" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br />
+                            <a class="button-primary"
+                                    href="javascript:addDropdown('document.forms.add_product')"
+                                    id="add_dropdown_button"><?php _e('Add custom dropdown', 'lbakgc'); ?></a>
+                            <br />
+                            <br />
+                            <?php _e('<a href="#" class="lbakgc_help" title="Adding a custom
+                                dropdown box gives you the ability to allow users to
+                                specify an extra option such as colour or men\'s/women\'s">(What\'s this?)</a>', 'lbakgc'); ?>
+                        </td>
+                        <td id="custom_dropdown">
+
                         </td>
                     </tr>
                     <tr>

@@ -234,6 +234,18 @@ function lbakgc_get_product_box_no_query($row, $options, $style = null) {
         } else {
             $price = $row->product_price ? '<div class="product_attribute"><b>Price:</b> <span class="product-price">' . lbakgc_parse_currency($row->product_price, $options) . '</span></div>' : '';
         }
+
+        if ($row->custom_dropdown) {
+            $custom_dropdown_array = unserialize($row->custom_dropdown);
+            $custom_dropdown = '<div class="product_attribute"><b>'.$custom_dropdown_array[0].':</b> <select class="product-attr-'.(str_replace(" ", "-", strtolower($custom_dropdown_array[0]))).'">';
+            for ($i = 1; $i < sizeof($custom_dropdown_array); $i++) {
+                $custom_dropdown .= '<option>'.$custom_dropdown_array[$i].'</option>';
+            }
+            $custom_dropdown .= '</select></div>';
+        }
+        else {
+            $custom_dropdown = "";
+        }
         $shipping = $row->product_shipping ? '<div class="product_attribute"><b>Shipping:</b> <span class="product-shipping">' . lbakgc_parse_currency($row->product_shipping, $options) . '</span></div>' : '';
         $description = $row->product_description ? '<div class="product_attribute"><b>Description:</b> <span class="product-attr-description">' . nl2br($row->product_description) . '</span></div>' : '';
         $extra = $row->product_extra ? '<div class="product_attribute"><b>Extra Info:</b> <span class="product-attr-extra">' . nl2br($row->product_extra) . '</span></div>' : '';
@@ -254,6 +266,7 @@ function lbakgc_get_product_box_no_query($row, $options, $style = null) {
                         ' . $description . '
                         ' . $extra . '
                         ' . $user_input . '
+                        ' . $custom_dropdown . '
                         ' . $button . '
                     </div>
                 </div>
@@ -270,6 +283,8 @@ function lbakgc_get_product_box_no_query($row, $options, $style = null) {
                         ' . $shipping . '
                         ' . $description . '
                         ' . $extra . '
+                        ' . $user_input . '
+                        ' . $custom_dropdown . '
                     </div>
                 </div>
             ';

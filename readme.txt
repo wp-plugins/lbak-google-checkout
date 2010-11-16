@@ -6,7 +6,7 @@ Donate link: http://donate.lbak.co.uk/
 Tags: e-commerce, google, checkout, sell, products, easy
 Requires at least: 3.0
 Tested up to: 3.0.1
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 
 A simple, easy to use Google Checkout integration WordPress plugin.
 
@@ -65,6 +65,11 @@ The frequently asked questions can be found either inside the plugin or at
 http://lbak.co.uk/faq.php?step=get&tag=lbakgc
 
 == Changelog ==
+
+= 1.3.3 =
+
+* Fixed another bug with the auto updating of the custom html field.
+* Added the ability to add a custom dropdown box for things such as colour.
 
 = 1.3.2 =
 
