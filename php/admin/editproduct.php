@@ -79,7 +79,8 @@ function lbakgc_edit_product($product_id) {
             lbakgc_log('Failed to edit product.', null, 'urgent');
             echo '<div class="error">Failed to update product "' . $data['product_name'] . '"
             to the database. Please try again. If this problem persists please
-            send an email to samwho@lbak.co.uk with as much detail as you can.</div>';
+            send an email to samwho@lbak.co.uk with as much detail as you can. Note:
+            This message also displays if you hit "Edit" without making any changes.</div>';
         }
     } else {
         $row = lbakgc_stripslashes_product($wpdb->get_row('SELECT * FROM `' . $options['product_table_name'] . '` WHERE `product_id`=' . $product_id));

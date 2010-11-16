@@ -78,9 +78,9 @@ function updateProductPreview(form) {
         if (in_stock.checked) {
             preview += '<div role="button" alt="Add to cart" tabindex="0" class="googlecart-add-button"></div>\n';
         }
-    }
 
-    preview += '</div>\n'; //close the product class div
+        preview += '</div>\n'; //close the product class div
+    }
 
     //Update the custom HTML form field if the product is in stock and the custom
     //HTML form field is not currently in focus.
