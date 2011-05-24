@@ -6,11 +6,14 @@ Donate link: http://donate.lbak.co.uk/
 Tags: e-commerce, google, checkout, sell, products, easy
 Requires at least: 3.0
 Tested up to: 3.0.1
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 
 A simple, easy to use Google Checkout integration WordPress plugin.
 
 == Description ==
+
+IMPORTANT NOTE: The original author of this plugin no longer maintains it. If you
+wish to take over the project, please feel free to get in touch.
 
 The LBAK Google Checkout plugin is aimed mainly at small projects that just want
 to sell a few things on their blog through Google Checkout and don't want too
@@ -25,7 +28,7 @@ your blog posts with short codes.
 * Customisable settings and CSS to help you get the look and feel that you want.
 * An option to totally customise how your product looks using the Google
 Checkout API if you feel comfortable doing that.
-* Very little excess and clutter. 
+* Very little excess and clutter.
 
 == Installation ==
 
@@ -65,6 +68,11 @@ The frequently asked questions can be found either inside the plugin or at
 http://lbak.co.uk/faq.php?step=get&tag=lbakgc
 
 == Changelog ==
+
+= 1.3.4 =
+
+* As of this release, the original author provides no official support for
+this plugin. If you wish to take over writing it, please get in touch.
 
 = 1.3.3 =
 

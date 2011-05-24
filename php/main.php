@@ -28,7 +28,7 @@ function lbakgc_add_header() {
               </script>';
     }
 
-    echo '<link rel="stylesheet" type="text/css" 
+    echo '<link rel="stylesheet" type="text/css"
         href="'.lbakgc_get_base_url().'/css/googlecheckout.php?iw='.urlencode($options['image-width']).'
             &ih='.urlencode($options['image-height']).'&pw='.urlencode($options['product-width']).'&ph='.urlencode($options['product-height']).'
                 &tc='.urlencode($options['title-colour']).'" />';
@@ -211,33 +211,8 @@ function lbakgc_get_allow_url_fopen() {
     }
 }
 
-/**
- * This function sends off a log entry to my log API on lbak.co.uk
- * It respects the fact that some people may not want to submit data about
- * their usage to me and there is an option to turn it off in the settings.
- *
- * When using this function is it necessary to submit an $origin as the second
- * argument. This HAS TO BE __FILE__.':'.__LINE__ so that I know where the
- * log occurred.
- */
 function lbakgc_log($message, $origin = null, $type = "message", $override = false) {
-    $options = lbakgc_get_options();
-    if (($options['log'] != false && $message != null) || $override) {
-        $message .= ' (lbakgc wp plugin v' . lbakgc_get_version().')';
-        $url = 'http://lbak.co.uk/log.php?step=new';
-        $url .= '&message=' . urlencode($message) . '&url=' .
-            urlencode($_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] .
-            $_SERVER['QUERY_STRING']) . '&phpver=' . phpversion() .
-        '&origin=' . urlencode($origin) .
-        '&post_vars=' . lbakgc_get_post_vars() .'&type='.$type.'&tag=lbakgc';
-        if (($result = lbakgc_get_web_page($url))) {
-            return $result;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
+    // used to store logging info, since deprecated
 }
 
 /*
